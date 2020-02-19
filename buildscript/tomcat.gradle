@@ -1,13 +1,13 @@
 
-def getTomcatHome() {
+def tomcatHome() {
 	String d = System.getProperty('tomcat.home')
 	return d == null ? '' : d;
 }
 
-def cmdTomcatBat(batFile) {
+def tomcatProc(batFile) {
 	ProcessBuilder pb = new ProcessBuilder('cmd', '/C', batFile)
-	if (getTomcatHome() != '') {
-		pb.directory(file(getTomcatHome() + '/bin'))
+	if (tomcatHome() != '') {
+		pb.directory(file(tomcatHome() + '/bin'))
 		pb.start()
 	}
 }
@@ -15,13 +15,13 @@ def cmdTomcatBat(batFile) {
 task copyWar(type: Copy, dependsOn: war) {
 	from 'build/libs'
 	include 'gradle-efg.war'
-	into getTomcatHome() + '/webapps'
+	into tomcatHome() + '/webapps'
 }
 
 task shutdown() {
-	cmdTomcatBat('shutdown.bat')
+	tomcatProc('shutdown.bat')
 }
 
 task start() {
-	cmdTomcatBat('startup.bat')
+	tomcatProc('startup.bat')
 }
